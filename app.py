@@ -116,17 +116,6 @@ with st.sidebar:
 
     st.divider()
 
-    # Actions
-    if st.button("🗑️ Clear Chat", use_container_width=True):
-        g = current_guardrail()
-        st.session_state.messages = [{
-            "role": "assistant",
-            "content": f"Chat cleared. Active: **{g['name']}**\n\n{g['desc']}",
-            "timestamp": datetime.now().strftime("%H:%M"),
-            "blocked": False,
-        }]
-        st.rerun()
-
 
 # ============================================================
 # Header
@@ -237,6 +226,19 @@ if "pending_prompt" in st.session_state:
     text = st.session_state.pending_prompt
     del st.session_state["pending_prompt"]
     process_message(text)
+
+# Clear Chat button near chatbox
+col_input, col_clear = st.columns([8, 1])
+with col_clear:
+    if st.button("🗑️ Clear Chat", use_container_width=True):
+        g = current_guardrail()
+        st.session_state.messages = [{
+            "role": "assistant",
+            "content": f"Chat cleared. Active: **{g['name']}**\n\n{g['desc']}",
+            "timestamp": datetime.now().strftime("%H:%M"),
+            "blocked": False,
+        }]
+        st.rerun()
 
 # Chat input
 user_input = st.chat_input("Type a message...")
