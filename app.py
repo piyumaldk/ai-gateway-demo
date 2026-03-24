@@ -70,7 +70,7 @@ def format_error(response):
 # ============================================================
 
 with st.sidebar:
-    st.markdown("## 🛡️ AI Gateway Demo")
+    st.markdown("## WSO2 AI Gateway Demo")
     st.caption("WSO2 API Manager — Guardrails")
 
     # Connection status
@@ -80,7 +80,7 @@ with st.sidebar:
     else:
         st.error("🔴 Gateway unreachable")
 
-    st.divider()
+   
 
     # Guardrail selection
     st.markdown("##### Select Guardrail")
@@ -106,14 +106,7 @@ with st.sidebar:
         }]
         st.rerun()
 
-    # Show guardrail info
     g = current_guardrail()
-    if g["id"] == "no_guardrail":
-        st.warning(f"⚠️ **{g['name']}**")
-    else:
-        st.info(f"**{g['name']}**")
-
-    st.caption(f"API: `{g['context']}/{g['version']}`")
 
     st.divider()
 
@@ -144,7 +137,9 @@ col1, col2 = st.columns([4, 1])
 with col1:
     st.markdown(f"### {g['name']}")
     st.caption(g['desc'])
-    st.caption(f"Gateway: `{GUARDRAIL_APIS[st.session_state.selected_guardrail_index]['context']}`")
+    api_context = GUARDRAIL_APIS[st.session_state.selected_guardrail_index]['context']
+    api_version = GUARDRAIL_APIS[st.session_state.selected_guardrail_index]['version']
+    st.caption(f"API: `{api_context}/{api_version}`")
 with col2:
     if st.button("⌨️ Logs", use_container_width=True):
         st.session_state.show_logs = not st.session_state.show_logs
