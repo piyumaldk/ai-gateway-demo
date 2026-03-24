@@ -20,7 +20,7 @@ st.set_page_config(
 
 css_path = Path("styles.css")
 if css_path.exists():
-    st.markdown(f"<style>{css_path.read_text()}</style>", unsafe_allow_html=True)
+    st.html(f"<style>{css_path.read_text()}</style>")
 
 
 # ============================================================
@@ -272,7 +272,7 @@ if st.session_state.show_logs:
             safe = entry.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
             log_html += f'<div style="color:{color};padding:1px 0;word-break:break-all;">{safe}</div>'
         log_html += "</div>"
-        st.markdown(log_html, unsafe_allow_html=True)
+        st.html(log_html)
         if st.button("🗑️ Clear Logs"):
             st.session_state.logs = [log_system("Logs cleared")]
             st.rerun()
