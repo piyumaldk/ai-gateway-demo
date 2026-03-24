@@ -109,9 +109,9 @@ with st.sidebar:
     # Show guardrail info
     g = current_guardrail()
     if g["id"] == "no_guardrail":
-        st.warning(f"⚠️ **{g['name']}**\n\n{g['desc']}")
+        st.warning(f"⚠️ **{g['name']}**")
     else:
-        st.info(f"**{g['name']}**\n\n{g['desc']}")
+        st.info(f"**{g['name']}**")
 
     st.caption(f"API: `{g['context']}/{g['version']}`")
 
@@ -143,6 +143,7 @@ g = current_guardrail()
 col1, col2 = st.columns([4, 1])
 with col1:
     st.markdown(f"### {g['name']}")
+    st.caption(g['desc'])
     st.caption(f"Gateway: `{GUARDRAIL_APIS[st.session_state.selected_guardrail_index]['context']}`")
 with col2:
     if st.button("⌨️ Logs", use_container_width=True):
