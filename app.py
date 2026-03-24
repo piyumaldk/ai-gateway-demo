@@ -273,6 +273,3 @@ if st.session_state.show_logs:
         if st.button("🗑️ Clear Logs"):
             st.session_state.logs = [log_system("Logs cleared")]
             st.rerun()
-
-st.markdown("---")
-st.caption(f"🛡️ {g['name']} · 📝 {len(st.session_state.messages)} messages")
