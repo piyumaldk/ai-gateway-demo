@@ -9,3 +9,4 @@ __pycache__/
 # IDE/editor settings
 .vscode/
 .env
+secret.py

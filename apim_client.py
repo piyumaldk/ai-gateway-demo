@@ -40,7 +40,7 @@ class GatewayClient:
         self.session = requests.Session()
         if APIM_GATEWAY_AUTH_MODE == "apikey":
             self.session.headers.update({
-                "ApiKey": APIM_GATEWAY_TOKEN,
+                "Internal-Key": APIM_GATEWAY_TOKEN,
                 "Content-Type": "application/json",
             })
         else:
