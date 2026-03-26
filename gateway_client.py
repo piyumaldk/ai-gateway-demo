@@ -1,21 +1,14 @@
 import re
-import random
 import time
 from dataclasses import dataclass
 from typing import Dict, Optional
 
 import requests
-import urllib3
 
 from config import (
     APIM_GATEWAY_URL,
-    APIM_GATEWAY_AUTH_MODE,
-    APIM_GATEWAY_TOKEN,
     APIM_VERIFY_SSL,
 )
-
-if not APIM_VERIFY_SSL:
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 @dataclass
@@ -38,25 +31,20 @@ class GatewayClient:
         self.verify_ssl = APIM_VERIFY_SSL
 
         self.session = requests.Session()
-        if APIM_GATEWAY_AUTH_MODE == "apikey":
-            self.session.headers.update({
-                "Internal-Key": APIM_GATEWAY_TOKEN,
-                "Content-Type": "application/json",
-            })
-        else:
-            self.session.headers.update({
-                "Authorization": f"Bearer {APIM_GATEWAY_TOKEN}",
-                "Content-Type": "application/json",
-            })
+        self.session.headers.update({"Content-Type": "application/json"})
 
     def send_chat(self, message: str, context: str, version: str,
-                  chat_path: str, model: str) -> ChatResponse:
+                  chat_path: str, model: str, api_key: str = "") -> ChatResponse:
         start = time.time()
         url = self._build_url(context, version, chat_path)
         payload = {"model": model, "messages": [{"role": "user", "content": message}]}
 
         try:
-            resp = self.session.post(url, json=payload, verify=self.verify_ssl, timeout=30)
+            resp = self.session.post(
+                url, json=payload,
+                headers={"X-API-Key": api_key},
+                verify=self.verify_ssl, timeout=30,
+            )
             latency = int((time.time() - start) * 1000)
 
             # Guardrail blocked (HTTP 446)

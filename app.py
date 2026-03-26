@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 
 from config import GUARDRAIL_APIS, DEFAULT_MODEL
-from apim_client import GatewayClient
+from gateway_client import GatewayClient
 from logger import log_request, log_guardrail_block, log_system
 
 
@@ -189,6 +189,7 @@ def process_message(user_text: str):
         version=g["version"],
         chat_path=g["chat_path"],
         model=st.session_state.model,
+        api_key=g["api_key"],
     )
 
     st.session_state.messages.append({

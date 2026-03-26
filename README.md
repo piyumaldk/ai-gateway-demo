@@ -34,18 +34,32 @@ pip3 install -r requirements.txt
 
 ## Configuration
 
-Update `config.py` before running the app:
+### 1. API Keys
+
+Create `api_keys.py` in the project root with a variable for each API. The variable name must match the `api_key` reference in `config.py`:
 
 ```python
-APIM_GATEWAY_AUTH_MODE = "apikey"
-APIM_GATEWAY_TOKEN = "your_api_key_here"
+APIM4OMINI = "your-api-key-here"
+APIM4OMINIPIIMASKINGREGEX = "your-api-key-here"
 ```
 
-This app is configured for local APIM access:
+### 2. Gateway Certificate
 
-- Gateway URL: `https://localhost:8243`
-- SSL verification: `APIM_VERIFY_SSL = False`
-- Default model: `gpt-4o`
+Copy your gateway's `default-listener.crt` into the `certs/` directory:
+
+```bash
+mkdir -p certs
+cp /path/to/ai-gateway/resources/certificates/default-listener.crt certs/
+```
+
+This enables TLS verification against the gateway's self-signed certificate.
+
+### Settings
+
+- Gateway URL: `https://localhost:8443`
+- SSL verification: pinned to `certs/default-listener.crt`
+- Auth: `X-API-Key` header (per-API key)
+- Default model: `gpt-4`
 
 ## Run
 
