@@ -53,4 +53,4 @@ GUARDRAIL_APIS = [
     },
 ]
 
-DEFAULT_MODEL = "gpt-4"
+DEFAULT_MODEL = "gpt-4o-mini"

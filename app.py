@@ -80,39 +80,33 @@ with st.sidebar:
     else:
         st.error("🔴 Gateway unreachable")
 
-   
+    st.success(f"Model: {DEFAULT_MODEL}")
 
-    # Guardrail selection
-    st.markdown("##### Select Guardrail")
-    guardrail_names = [g["name"] for g in GUARDRAIL_APIS]
-    selected_name = st.selectbox(
-        "Guardrail", guardrail_names,
-        index=st.session_state.selected_guardrail_index,
-        label_visibility="collapsed",
-    )
-
-    new_index = guardrail_names.index(selected_name)
-    if new_index != st.session_state.selected_guardrail_index:
-        old = GUARDRAIL_APIS[st.session_state.selected_guardrail_index]
-        new = GUARDRAIL_APIS[new_index]
-        st.session_state.selected_guardrail_index = new_index
-        st.session_state.logs.append(log_system(f"Switched: {old['name']} → {new['name']}"))
-        st.session_state.messages = [{
-            "role": "assistant",
-            "content": f"Switched to **{new['name']}**.\n\n{new['desc']}\n\n"
-                       f"*Try the test prompts below to see this guardrail in action.*",
-            "timestamp": datetime.now().strftime("%H:%M"),
-            "blocked": False,
-        }]
-        st.rerun()
+    # Guardrail selection as menu items
+    st.markdown("##### Guardrails")
+    for idx, guardrail in enumerate(GUARDRAIL_APIS):
+        is_active = idx == st.session_state.selected_guardrail_index
+        btn_type = "primary" if is_active else "secondary"
+        if st.button(
+            guardrail["name"],
+            key=f"guardrail_{idx}",
+            use_container_width=True,
+            type=btn_type,
+        ):
+            if idx != st.session_state.selected_guardrail_index:
+                old = GUARDRAIL_APIS[st.session_state.selected_guardrail_index]
+                st.session_state.selected_guardrail_index = idx
+                st.session_state.logs.append(log_system(f"Switched: {old['name']} → {guardrail['name']}"))
+                st.session_state.messages = [{
+                    "role": "assistant",
+                    "content": f"Switched to **{guardrail['name']}**.\n\n{guardrail['desc']}\n\n"
+                               f"*Try the test prompts below to see this guardrail in action.*",
+                    "timestamp": datetime.now().strftime("%H:%M"),
+                    "blocked": False,
+                }]
+                st.rerun()
 
     g = current_guardrail()
-
-    st.divider()
-
-    # Model selection
-    st.markdown("##### Model")
-    st.session_state.model = st.text_input("Model ID", value=st.session_state.model, label_visibility="collapsed")
 
     st.divider()
 
