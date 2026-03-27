@@ -1,3 +1,4 @@
+import json
 import re
 import time
 from dataclasses import dataclass
@@ -8,6 +9,7 @@ import requests
 from config import (
     APIM_GATEWAY_URL,
     APIM_VERIFY_SSL,
+    DEBUG,
 )
 
 
@@ -33,16 +35,39 @@ class GatewayClient:
         self.session = requests.Session()
         self.session.headers.update({"Content-Type": "application/json"})
 
+    def _log_curl(self, method: str, url: str, headers: dict, payload: dict) -> None:
+        """Print a formatted curl command to the server console."""
+        if not DEBUG:
+            return
+        header_parts = " \
+  ".join(
+            f"-H '{k}: {v}'" for k, v in {**self.session.headers, **headers}.items()
+        )
+        body = json.dumps(payload, indent=2)
+        curl = (
+            f"\n{'=' * 60}\n"
+            f"DEBUG CURL\n"
+            f"{'=' * 60}\n"
+            f"curl -k -X {method} '{url}' \\\n"
+            f"  {header_parts} \\\n"
+            f"  -d '{body}'\n"
+            f"{'=' * 60}"
+        )
+        print(curl)
+
     def send_chat(self, message: str, context: str, version: str,
                   chat_path: str, model: str, api_key: str = "") -> ChatResponse:
         start = time.time()
         url = self._build_url(context, version, chat_path)
         payload = {"model": model, "messages": [{"role": "user", "content": message}]}
+        extra_headers = {"X-API-Key": api_key}
+
+        self._log_curl("POST", url, extra_headers, payload)
 
         try:
             resp = self.session.post(
                 url, json=payload,
-                headers={"X-API-Key": api_key},
+                headers=extra_headers,
                 verify=self.verify_ssl, timeout=30,
             )
             latency = int((time.time() - start) * 1000)

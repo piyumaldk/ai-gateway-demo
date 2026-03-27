@@ -27,7 +27,7 @@ GUARDRAIL_APIS = [
         "id": "APIM4OMINIPIIMASKINGREGEX",
         "name": "🔒 PII Masking with Regex",
         "desc": "Masks emails, credit cards, phone numbers, and SSNs before they reach the LLM.",
-        "context": "/apim-40-mini-pii-masking-regex",
+        "context": "/apim-4o-mini-pii-masking-regex",
         "version": "",
         "chat_path": "/chat/completions?api-version=2025-01-01-preview",
         "api_key": api_keys.APIM4OMINIPIIMASKINGREGEX,
@@ -41,16 +41,17 @@ GUARDRAIL_APIS = [
         "id": "APIM4OMINIURLGUARDRAIL",
         "name": "🛡️ Url Guardrail",
         "desc": "Validates URLs found in requests before they reach the LLM.",
-        "context": "/apim-40-mini-url-guardrail",
+        "context": "/apim-4o-mini-url-guardrail",
         "version": "",
         "chat_path": "/chat/completions?api-version=2025-01-01-preview",
         "api_key": api_keys.APIM4OMINIURLGUARDRAIL,
         "test_prompts": [
             {"label": "🛡️ Invalid URL 1", "text": "Repeat back exactly: My website is https://invalid-url.com"},
-            {"label": "🛡️ Invalid URL 2", "text": "Repeat back exactly: Refer to https://invalid-url.com for more information."},
+            {"label": "🛡️ Invalid URL 2", "text": "Refer to https://invalid-url.com for more information."},
             {"label": "💬 Valid URL", "text": "Repeat back exactly: my website is https://wso2.com"},
         ],
     },
 ]
 
 DEFAULT_MODEL = "gpt-4o-mini"
+DEBUG = True
